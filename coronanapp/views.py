@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import User
 
 # Create your views here.
 def home(request):
@@ -21,3 +22,7 @@ def add_bet(request):
 
 def bets(request):
     return render(request, 'bets.html', {})
+
+def insert_user(request, username, password):
+    user_instance = User.objects.create(username=username, password=password, funds=0)
+    return render(request, 'login.html')
