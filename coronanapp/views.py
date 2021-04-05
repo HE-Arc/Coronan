@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from .models import Profile
 from django.contrib import messages
 from django.http import HttpResponse
 from django import forms
@@ -12,7 +13,12 @@ def home(request):
     return render(request, 'home.html', {})
 
 def profile(request):
-    return render(request, 'profile.html', {})
+    profile = Profile.objects.get(user=request.user)
+    context = {
+        'profile': profile
+    }
+    template = 'profile.html'  
+    return render(request, template, context)
 
 def add_funds(request):
     return render(request, 'add_funds.html', {})
@@ -42,16 +48,10 @@ def login_user(request):
             messages.error(request,"Invalid username or password.")
     else:
         messages.error(request,"Invalid username or password.")
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'login.html', context={'form': form})
 
 def add_bet(request):
     return render(request, 'add_bet.html', {})
 
 def bets(request):
     return render(request, 'bets.html', {})
-
-def insert_user(request):
-    user = User.objects.create_user('Alexis', 'alexis.portmann@gmail.com', 'machintruc')
-    user.profile.funds = 50
-    user.save()
-    return render(request, 'login.html', {})
