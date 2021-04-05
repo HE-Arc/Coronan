@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from .models import Profile, Bet
+from .forms import BetForm
 from django.contrib import messages
 from django.http import HttpResponse
 from django import forms
@@ -51,7 +52,21 @@ def login_user(request):
     return render(request, 'login.html', context={'form': form})
 
 def add_bet(request):
-    return render(request, 'add_bet.html', {})
+    if request.method == 'POST':
+        form = BetForm(request.POST)
+
+        if form.is_valid():
+            cases = form.cleaned_data.get('cases')
+            sum = form.cleaned_data.get('sum')
+            bet = Bet(moneyBet=sum, cases=cases, user=request.user)
+            bet.save()
+            return redirect('/bets/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = BetForm()
+
+    return render(request, 'add_bet.html', {'form': form})
 
 def bets(request):
     user_bets = Bet.objects.all().filter(user=request.user)
