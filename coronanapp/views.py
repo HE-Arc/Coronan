@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Bet
 from django.contrib import messages
 from django.http import HttpResponse
 from django import forms
@@ -54,4 +54,9 @@ def add_bet(request):
     return render(request, 'add_bet.html', {})
 
 def bets(request):
-    return render(request, 'bets.html', {})
+    user_bets = Bet.objects.all().filter(user=request.user)
+    template = 'bets.html'
+    bets = {
+        'bets': user_bets
+    }
+    return render(request, template, bets)
