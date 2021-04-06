@@ -1,1 +1,50 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <h1>Add Bet page</h1>
+<div style="width: 40%">
+    <canvas id="myChart"></canvas>
+</div>
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <p>
+      {{ field.label_tag }}<br>
+      {{ field }}
+      {% if field.help_text %}
+        <small style="color: grey">{{ field.help_text }}</small>
+      {% endif %}
+      {% for error in field.errors %}
+        <p style="color: red">{{ error }}</p>
+      {% endfor %}
+    </p>
+  {% endfor %}
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+        var cases = [];
+        var dates = [];
+        $.getJSON('https://corona-api.com/countries/ch', function(data) {
+        var timeline = data.data.timeline;
+
+        timeline.reverse().forEach(function(data){
+            cases.push(data.confirmed);
+            dates.push(data.date);
+        });
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+         labels: dates,
+         datasets: [{
+            label: 'Cases confirmed',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: cases,
+        }]
+       },
+     });
+
+    });     
+ </script>

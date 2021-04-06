@@ -1,1 +1,19 @@
 <h1>Bets page</h1>
+<table>
+    <tr>
+      <th>Money Bet</th>
+      <th>Money Won</th>
+      <th>Ratio</th>
+      <th>Date</th>
+      <th>Cases</th>
+    </tr>
+    {% for bet in bets.all %}
+    <tr>
+        <td>{{bet.moneyBet}}</td>
+        <td>{{bet.moneyWon}}</td>
+        <td>{{bet.ratio}}</td>
+        <td>{{bet.date}}</td>
+        <td>{{bet.cases}}</td>
+    </tr>
+    {% endfor %}
+  </table>
