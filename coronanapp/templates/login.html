@@ -1,17 +1,69 @@
+<!--
+
+
 <h2>Log in Form</h2>
 <form method="post">
-    {% csrf_token %}
-    {% for field in form %}
-      <p>
-        {{ field.label_tag }}<br>
-        {{ field }}
-        {% if field.help_text %}
-          <small style="color: grey">{{ field.help_text }}</small>
-        {% endif %}
-        {% for error in field.errors %}
+  {% csrf_token %}
+  {% for field in form %}
+  <p>
+    {{ field.label_tag }}<br>
+    {{ field }}
+    {% if field.help_text %}
+    <small style="color: grey">{{ field.help_text }}</small>
+    {% endif %}
+    {% for error in field.errors %}
+  <p style="color: red">{{ error }}</p>
+  {% endfor %}
+  </p>
+  {% endfor %}
+  <button type="submit">Sign up</button>
+</form>
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {% include "toInclude.html" %}
+
+  <title>Login</title>
+</head>
+
+<body>
+
+  {% include "headerLogged.html" %}
+
+
+  <div class="centered">
+    <div id="card" class="card">
+
+      <div class=" card-body">
+        <h1 class="card-title">Log in Form</h1>
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          <p>
+            {{ field.label_tag }}<br>
+            {{ field }}
+            {% if field.help_text %}
+            <small style="color: grey">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
           <p style="color: red">{{ error }}</p>
-        {% endfor %}
-      </p>
-    {% endfor %}
-    <button type="submit">Sign up</button>
-    </form>
+          {% endfor %}
+          </p>
+          {% endfor %}
+          <button type="submit">Sign up</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  {% include "footer.html" %}
+</body>
+
+</html>

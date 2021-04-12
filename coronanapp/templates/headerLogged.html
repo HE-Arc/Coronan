@@ -1,13 +1,13 @@
 <header>
 
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(156, 99, 156);">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(156, 99, 156); ">
         {% load static %}
         <img src=" {% static 'coronanapp/images/coronan.png' %}" alt="My image" width="5%" height="5%">
         <div class="d-flex flex-grow-1">
             <span class="w-100 d-lg-none d-block">
                 <!-- hidden spacer to center brand on mobile -->
             </span>
-            <a class="navbar-brand d-none d-lg-inline-block" href="#"> Bet </a>
+            <a class="navbar-brand d-none d-lg-inline-block" href="#" style="color:#e5e5e5;"> Bet </a>
             <a class="navbar-brand-two mx-auto d-lg-none d-inline-block" href="#">
                 <img src="//placehold.it/40?text=LOGO" alt="logo">
             </a>
@@ -17,15 +17,15 @@
                 </button>
             </div>
         </div>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="btn-group dropstart" style="margin-right: 1em;">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                aria-expanded="false">
                 User
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Bet</a></li>
+                <li><a class="dropdown-item" href="#">Funds</a></li>
             </ul>
         </div>
     </nav>
