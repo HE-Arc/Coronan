@@ -1,17 +1,50 @@
-<h1>Add funds page</h1>
-<form method="post">
-    {% csrf_token %}
-    {% for field in form %}
-    <p>
-      {{ field.label_tag }}<br>
-      {{ field }}
-      {% if field.help_text %}
-        <small style="color: grey">{{ field.help_text }}</small>
-      {% endif %}
-      {% for error in field.errors %}
-        <p style="color: red">{{ error }}</p>
-      {% endfor %}
-    </p>
-  {% endfor %}
-    <input type="submit" value="Submit">
-</form>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {% include "toInclude.html" %}
+
+  <title>Add Funds</title>
+</head>
+
+<body>
+
+  {% include "headerLogged.html" %}
+
+
+  <div class="centered">
+    <div id="card" class="card" style="width: 25rem;">
+
+      <div class=" card-body">
+
+        <h1 class="card-title">Add funds Page</h1>
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          <p>
+            {{ field.label_tag }}<br>
+            {{ field }}
+            {% if field.help_text %}
+            <small style="color: grey">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+          {% endfor %}
+          </p>
+          {% endfor %}
+          <button type="submit" value="Submit" class="btn btn-secondary">Submit</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+
+  {% include "footer.html" %}
+</body>
+
+</html>
