@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from .models import Profile, Bet
-from .forms import BetForm
+from .forms import BetForm, FundsForm
 from django.contrib import messages
 from django.http import HttpResponse
 from django import forms
@@ -22,7 +22,19 @@ def profile(request):
     return render(request, template, context)
 
 def add_funds(request):
-    return render(request, 'add_funds.html', {})
+    if request.method == 'POST':
+        form = FundsForm(request.POST)
+        if form.is_valid():
+            funds = form.cleaned_data.get('funds')
+            profile = Profile.objects.get(user=request.user)
+            profile.funds += funds
+            profile.save()
+            return redirect('/profile/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = FundsForm()
+    return render(request, 'add_funds.html', {'form': form})
 
 def sign_up(request):
     form = UserCreationForm(request.POST)
@@ -32,6 +44,9 @@ def sign_up(request):
         password = form.cleaned_data.get('password1')
         user = authenticate(username=username, password=password)
         login(request, user)
+        profile = Profile.objects.get(user=request.user)
+        profile.funds = 0
+        profile.save()
         return redirect('home')
     return render(request, 'sign_up.html', {'form': form})
 
@@ -58,14 +73,13 @@ def add_bet(request):
         if form.is_valid():
             cases = form.cleaned_data.get('cases')
             sum = form.cleaned_data.get('sum')
-            bet = Bet(moneyBet=sum, cases=cases, user=request.user)
+            bet = Bet(moneyBet=sum, cases=cases, user=request.user, status="Pending...")
             bet.save()
             return redirect('/bets/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = BetForm()
-
     return render(request, 'add_bet.html', {'form': form})
 
 def bets(request):
