@@ -9,6 +9,7 @@ class Bet(models.Model):
     ratio = models.IntegerField(blank=True, null=True)
     date = models.DateField(blank=True, null=True)
     cases = models.IntegerField(blank=True, null=True)
+    status = models.CharField(max_length=10, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 

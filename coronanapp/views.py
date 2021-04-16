@@ -73,7 +73,7 @@ def add_bet(request):
         if form.is_valid():
             cases = form.cleaned_data.get('cases')
             sum = form.cleaned_data.get('sum')
-            bet = Bet(moneyBet=sum, cases=cases, user=request.user)
+            bet = Bet(moneyBet=sum, cases=cases, user=request.user, status="Pending...")
             bet.save()
             return redirect('/bets/')
 
