@@ -1,50 +1,85 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<h1>Add Bet page</h1>
-<div style="width: 40%">
-    <canvas id="myChart"></canvas>
-</div>
-<form method="post">
-    {% csrf_token %}
-    {% for field in form %}
-    <p>
-      {{ field.label_tag }}<br>
-      {{ field }}
-      {% if field.help_text %}
-        <small style="color: grey">{{ field.help_text }}</small>
-      {% endif %}
-      {% for error in field.errors %}
-        <p style="color: red">{{ error }}</p>
-      {% endfor %}
-    </p>
-  {% endfor %}
-    <input type="submit" value="Submit">
-</form>
+<!DOCTYPE html>
+<html lang="en">
 
-<script>
-        var cases = [];
-        var dates = [];
-        $.getJSON('https://corona-api.com/countries/ch', function(data) {
-        var timeline = data.data.timeline;
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        timeline.reverse().forEach(function(data){
-            cases.push(data.confirmed);
-            dates.push(data.date);
-        });
+  {% include "toInclude.html" %}
 
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
+  <title>Add Bet</title>
+</head>
+
+<body>
+
+  {% include "headerLogged.html" %}
+
+
+  <div class="centered">
+    <div id="card" class="card" style="width: 45%; ">
+
+      <div class=" card-body">
+
+        <h1 class="card-title">Add Bet</h1>
+
+        <div class="center" style="width: 100%">
+          <canvas id="myChart"></canvas>
+        </div>
+        <div style="display: block; text-align: center;">
+          <form method="post" style="display: inline-block; margin-left: auto; margin-right: auto;">
+            {% csrf_token %}
+            {% for field in form %}
+            <p>
+              {{ field.label_tag }}<br>
+              {{ field }}
+              {% if field.help_text %}
+              <small style="color: grey">{{ field.help_text }}</small>
+              {% endif %}
+              {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+            {% endfor %}
+            </p>
+            {% endfor %}
+            <button type="submit" value="Submit" class="btn btn-secondary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  {% include "footer.html" %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    var cases = [];
+    var dates = [];
+    $.getJSON('https://corona-api.com/countries/ch', function (data) {
+      var timeline = data.data.timeline;
+
+      timeline.reverse().forEach(function (data) {
+        cases.push(data.confirmed);
+        dates.push(data.date);
+      });
+
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-         labels: dates,
-         datasets: [{
+          labels: dates,
+          datasets: [{
             label: 'Cases confirmed',
             backgroundColor: 'rgb(255, 99, 132)',
             borderColor: 'rgb(255, 99, 132)',
             data: cases,
-        }]
-       },
-     });
+          }]
+        },
+      });
 
-    });     
- </script>
+    });
+  </script>
+
+</body>
+
+</html>
