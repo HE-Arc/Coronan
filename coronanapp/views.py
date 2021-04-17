@@ -9,6 +9,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import redirect
 from datetime import date
+from .tasks import hourly_fetch
 
 # Create your views here.
 def home(request):
@@ -80,6 +81,7 @@ def add_bet(request):
             sum = form.cleaned_data.get('sum')
             bet = Bet(moneyBet=sum, cases=cases, user=request.user, status="Pending...", date=date.today().strftime('%Y-%m-%d'))    
             bet.save()
+            hourly_fetch(repeat=86400, repeat_until=None)
             return redirect('/bets/')
 
     # if a GET (or any other method) we'll create a blank form
