@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import Profile, Bet
 from .forms import BetForm, FundsForm
@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import redirect
+from datetime import date
 
 # Create your views here.
 def home(request):
@@ -66,6 +67,10 @@ def login_user(request):
         messages.error(request,"Invalid username or password.")
     return render(request, 'login.html', context={'form': form})
 
+def logout_user(request):
+    logout(request)
+    return redirect('/login/')
+
 def add_bet(request):
     if request.method == 'POST':
         form = BetForm(request.POST)
@@ -73,7 +78,7 @@ def add_bet(request):
         if form.is_valid():
             cases = form.cleaned_data.get('cases')
             sum = form.cleaned_data.get('sum')
-            bet = Bet(moneyBet=sum, cases=cases, user=request.user, status="Pending...")
+            bet = Bet(moneyBet=sum, cases=cases, user=request.user, status="Pending...", date=date.today().strftime('%Y-%m-%d'))    
             bet.save()
             return redirect('/bets/')
 

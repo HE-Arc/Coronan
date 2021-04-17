@@ -13,7 +13,11 @@
 
 <body>
 
-  {% include "headerLogged.html" %}
+  {% if user.is_authenticated %}
+    {% include "headerLogged.html" %}
+  {% else %}
+    {% include "header.html" %}
+  {% endif %}
 
 
   <div class="centered">
