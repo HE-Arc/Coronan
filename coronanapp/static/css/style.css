@@ -32,3 +32,9 @@ body {
 .coro-footer p:last-child {
   margin-bottom: 0;
 }
+.cycle-slideshow a,
+.cycle-slideshow a:focus,
+.cycle-slideshow a:hover,
+.cycle-slideshow a:active {
+  display: inline-block;
+}
