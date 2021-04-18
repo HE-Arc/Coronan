@@ -78,7 +78,7 @@ def add_bet(request):
 
         if form.is_valid():
             if date.today().weekday() == 6:
-                messages.error(request, "Vous ne pouvez pas parier le dimanche !")
+                messages.success(request, "Vous ne pouvez pas parier le dimanche !")
             else:
                 cases = form.cleaned_data.get('cases')
                 sum = form.cleaned_data.get('sum')
