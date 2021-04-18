@@ -25,12 +25,12 @@ def UpdateAllBets():
     ponderationDict = {}
     for bet in betThisWeek:
         betDate = abs(bet.date.weekday()-6)
-        ponderationDict[bet.user.pk] = (betDate * bet.moneyBet) / (moneySum * abs(bet.cases-getWeekCases(todayDate)))
+        ponderationDict[bet.pk] = (betDate * bet.moneyBet) / (moneySum * abs(bet.cases-getWeekCases(todayDate)))
     ponderationSum = 0
     for pond in ponderationDict:
         ponderationSum += ponderationDict[pond]
     for bet in betThisWeek:
-        bet.moneyWon = (ponderationDict[bet.user.pk] / ponderationSum) * moneySum
+        bet.moneyWon = (ponderationDict[bet.pk] / ponderationSum) * moneySum
         bet.status = "Validated"
         bet.save()
         profile = Profile.objects.get(user=bet.user.pk)

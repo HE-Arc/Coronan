@@ -84,7 +84,6 @@ def add_bet(request):
             profile = Profile.objects.get(user=request.user)
             profile.funds -= sum
             profile.save()
-            hourly_fetch(repeat=5, repeat_until=None)
             return redirect('/bets/')
 
     # if a GET (or any other method) we'll create a blank form

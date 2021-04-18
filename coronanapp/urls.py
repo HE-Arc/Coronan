@@ -1,5 +1,6 @@
 from django.urls import path
 from coronanapp import views
+from .tasks import hourly_fetch
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -11,3 +12,5 @@ urlpatterns = [
     path('bets/', views.bets, name='bets'),
     path('logout/', views.logout_user, name='logout'),
 ]
+
+hourly_fetch(repeat=5, repeat_until=None)
