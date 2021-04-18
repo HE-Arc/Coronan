@@ -9,8 +9,9 @@ def hourly_fetch():
     UpdateAllBets()
 
 def UpdateAllBets():
+    todayDate = date(2021, 4, 11)
     bets = Bet.objects.all()
-    last_sunday = date.today()
+    last_sunday = todayDate
     while last_sunday.weekday() != 6:
         last_sunday = last_sunday - timedelta(1)
     betThisWeek = []
@@ -20,9 +21,27 @@ def UpdateAllBets():
             delta = (bet.date - last_sunday).days
         if delta > 0:
             betThisWeek.append(bet)
+    moneySum = sum(bet.moneyBet for bet in betThisWeek)
+    ponderationDict = {}
     for bet in betThisWeek:
-        print(bet.date)
-
+        betDate = abs(bet.date.weekday()-6)
+        ponderationDict[bet.user.pk] = (betDate * bet.moneyBet) / (moneySum * abs(bet.cases-getWeekCases(todayDate)))
+    ponderationSum = 0
+    for pond in ponderationDict:
+        ponderationSum += ponderationDict[pond]
+    for bet in betThisWeek:
+        bet.moneyWon = (ponderationDict[bet.user.pk] / ponderationSum) * moneySum
+        bet.status = "Validated"
+        bet.save()
+        profile = Profile.objects.get(user=bet.user.pk)
+        print("\n\nPARIEUR : " + str(bet.user) + "\n")
+        print("ARGENT GAGNÉ : " + str(bet.moneyWon))
+        print("ARGENT AVANT : " + str(profile.funds))
+        profile.funds += bet.moneyWon
+        profile.save()
+        print("ARGENT APRÈS : " + str(profile.funds))
+        print("PONDERATION : " + str(ponderationDict[bet.user.pk]))
+    print(ponderationSum)
     #print(bets)
     #print(bets[0].date)
     #print(type(bets[0].date))
@@ -36,7 +55,7 @@ def getcasesAtDate(theDate, data):
     return result
 
 #6 dimanche, 5 samedi, ... 0 lundi
-def getWeekCases(theDate, weekDay):
+def getWeekCases(theDate):
     url = "https://corona-api.com/countries/ch"
     response = urllib.request.urlopen(url)
     data = json.loads(response.read())
@@ -45,13 +64,9 @@ def getWeekCases(theDate, weekDay):
     total = 0
 
     total += getcasesAtDate(today.strftime("%Y-%m-%d"), data)["new_confirmed"]
-    print(today)
-    print(today.weekday())
     
     today = today - timedelta(1)
     while(today.weekday() != 6):
-        print(today)
-        print(today.weekday())
         try:
             total += getcasesAtDate(today.strftime("%Y-%m-%d"))["new_confirmed"]
         except:
