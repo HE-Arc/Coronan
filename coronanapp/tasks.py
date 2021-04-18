@@ -9,42 +9,42 @@ def hourly_fetch():
     UpdateAllBets()
 
 def UpdateAllBets():
-    todayDate = date(2021, 4, 11)
-    bets = Bet.objects.all()
-    last_sunday = todayDate
-    while last_sunday.weekday() != 6:
-        last_sunday = last_sunday - timedelta(1)
-    betThisWeek = []
-    for bet in bets:
-        delta = 0
-        if bet.date:
-            delta = (bet.date - last_sunday).days
-        if delta > 0:
-            betThisWeek.append(bet)
-    moneySum = sum(bet.moneyBet for bet in betThisWeek)
-    ponderationDict = {}
-    for bet in betThisWeek:
-        betDate = abs(bet.date.weekday()-6)
-        ponderationDict[bet.pk] = (betDate * bet.moneyBet) / (moneySum * abs(bet.cases-getWeekCases(todayDate)))
-    ponderationSum = 0
-    for pond in ponderationDict:
-        ponderationSum += ponderationDict[pond]
-    for bet in betThisWeek:
-        bet.moneyWon = (ponderationDict[bet.pk] / ponderationSum) * moneySum
-        bet.status = "Validated"
-        bet.save()
-        profile = Profile.objects.get(user=bet.user.pk)
-        print("\n\nPARIEUR : " + str(bet.user) + "\n")
-        print("ARGENT GAGNÉ : " + str(bet.moneyWon))
-        print("ARGENT AVANT : " + str(profile.funds))
-        profile.funds += bet.moneyWon
-        profile.save()
-        print("ARGENT APRÈS : " + str(profile.funds))
-        print("PONDERATION : " + str(ponderationDict[bet.user.pk]))
-    print(ponderationSum)
-    #print(bets)
-    #print(bets[0].date)
-    #print(type(bets[0].date))
+    todayDate = datetime(2021, 4, 11, 20)
+    if todayDate.weekday() == 6 and todayDate.hour > 16:
+        bets = Bet.objects.all()
+        last_sunday = todayDate
+        while last_sunday.weekday() != 6:
+            last_sunday = last_sunday - timedelta(1)
+        betThisWeek = []
+        for bet in bets:
+            delta = 0
+            if bet.date:
+                delta = (datetime.combine(bet.date, datetime.min.time()) - last_sunday).days
+            if delta > 0 and bet.status == "Pending...":
+                betThisWeek.append(bet)
+        moneySum = sum(bet.moneyBet for bet in betThisWeek)
+        ponderationDict = {}
+        for bet in betThisWeek:
+            betDate = abs(bet.date.weekday()-6)
+            ponderationDict[bet.pk] = (betDate * bet.moneyBet) / (moneySum * abs(bet.cases-getWeekCases(todayDate)))
+        ponderationSum = 0
+        for pond in ponderationDict:
+            ponderationSum += ponderationDict[pond]
+        for bet in betThisWeek:
+            bet.moneyWon = (ponderationDict[bet.pk] / ponderationSum) * moneySum
+            bet.status = "Validated"
+            bet.save()
+            profile = Profile.objects.get(user=bet.user.pk)
+            print("\n\nPARIEUR : " + str(bet.user) + "\n")
+            print("ARGENT GAGNÉ : " + str(bet.moneyWon))
+            print("ARGENT AVANT : " + str(profile.funds))
+            profile.funds += bet.moneyWon
+            profile.save()
+            print("ARGENT APRÈS : " + str(profile.funds))
+            print("PONDERATION : " + str(ponderationDict[bet.pk]))
+        #print(bets)
+        #print(bets[0].date)
+        #print(type(bets[0].date))
 
 
 def getcasesAtDate(theDate, data):

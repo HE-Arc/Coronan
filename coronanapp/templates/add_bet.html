@@ -41,6 +41,13 @@
             {% endfor %}
             </p>
             {% endfor %}
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <lp style="color: red" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                {% endfor %}
+            </ul>
+            {% endif %}
             <button type="submit" value="Submit" class="btn btn-secondary">Submit</button>
           </form>
         </div>

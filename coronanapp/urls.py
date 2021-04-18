@@ -13,4 +13,4 @@ urlpatterns = [
     path('logout/', views.logout_user, name='logout'),
 ]
 
-hourly_fetch(repeat=5, repeat_until=None)
+hourly_fetch(repeat=3600, repeat_until=None)

@@ -77,14 +77,17 @@ def add_bet(request):
         form = BetForm(request.POST)
 
         if form.is_valid():
-            cases = form.cleaned_data.get('cases')
-            sum = form.cleaned_data.get('sum')
-            bet = Bet(moneyBet=sum, cases=cases, user=request.user, status="Pending...", date=date.today().strftime('%Y-%m-%d'))    
-            bet.save()
-            profile = Profile.objects.get(user=request.user)
-            profile.funds -= sum
-            profile.save()
-            return redirect('/bets/')
+            if date.today().weekday() == 6:
+                messages.error(request, "Vous ne pouvez pas parier le dimanche !")
+            else:
+                cases = form.cleaned_data.get('cases')
+                sum = form.cleaned_data.get('sum')
+                bet = Bet(moneyBet=sum, cases=cases, user=request.user, status="Pending...", date=date.today().strftime('%Y-%m-%d'))    
+                bet.save()
+                profile = Profile.objects.get(user=request.user)
+                profile.funds -= sum
+                profile.save()
+                return redirect('/bets/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
